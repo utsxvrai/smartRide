@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Passenger {
+  id               Int      @id @default(autoincrement())
+  name             String
+  luggageCount     Int
+  maxDetourMinutes Int
+  status           String   @default("ACTIVE")
+
+  rideRequests     RideRequest[]
+}
+
+model Cab {
+  id                     Int      @id @default(autoincrement())
+  totalSeats             Int
+  availableSeats         Int
+  totalLuggageCapacity   Int
+  availableLuggage       Int
+  status                 String   @default("AVAILABLE")
+
+  ridePools              RidePool[]
+}
+
+model RidePool {
+  id        Int      @id @default(autoincrement())
+  status    String   @default("ACTIVE")
+
+  cabId     Int
+  cab       Cab      @relation(fields: [cabId], references: [id])
+
+  rideRequests RideRequest[]
+}
+
+model RideRequest {
+  id            Int      @id @default(autoincrement())
+
+  pickupLat     Float
+  pickupLng     Float
+  dropLat       Float
+  dropLng       Float
+
+  status        String   @default("PENDING")
+
+  passengerId   Int
+  passenger     Passenger @relation(fields: [passengerId], references: [id])
+
+  poolId        Int?
+  pool          RidePool? @relation(fields: [poolId], references: [id])
+}

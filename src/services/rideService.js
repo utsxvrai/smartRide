@@ -100,6 +100,13 @@ class RideAllocationService {
       }
     });
 
+    const dist = haversine.calculateDistance(pickupCoords.lat, pickupCoords.lng, dropCoords.lat, dropCoords.lng);
+    const baseFare = 5.0;
+    const ratePerKm = 2.0;
+    const isShared = pool.rideRequests.length > 0;
+    const discount = isShared ? 0.75 : 1.0; 
+    const calculatedFare = (baseFare + (dist * ratePerKm)) * discount;
+
     const rideRequest = await tx.rideRequest.create({
       data: {
         passengerId: passenger.id,
@@ -108,9 +115,11 @@ class RideAllocationService {
         pickupLng: pickupCoords.lng,
         dropLat: dropCoords.lat,
         dropLng: dropCoords.lng,
-        status: "ACCEPTED"
+        status: "ACCEPTED",
+        fare: calculatedFare
       }
     });
+
 
     return { rideRequest, updatedCab };
   }

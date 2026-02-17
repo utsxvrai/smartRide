@@ -16,6 +16,7 @@ model Passenger {
   status           String   @default("ACTIVE")
 
   rideRequests     RideRequest[]
+  @@index([status])
 }
 
 model Cab {
@@ -27,6 +28,7 @@ model Cab {
   status                 String   @default("AVAILABLE")
 
   ridePools              RidePool[]
+  @@index([status])
 }
 
 model RidePool {
@@ -37,6 +39,7 @@ model RidePool {
   cab       Cab      @relation(fields: [cabId], references: [id])
 
   rideRequests RideRequest[]
+  @@index([status])
 }
 
 model RideRequest {
@@ -48,10 +51,16 @@ model RideRequest {
   dropLng       Float
 
   status        String   @default("PENDING")
+  fare          Float?
+
 
   passengerId   Int
   passenger     Passenger @relation(fields: [passengerId], references: [id])
 
   poolId        Int?
   pool          RidePool? @relation(fields: [poolId], references: [id])
+
+  @@index([status])
+  @@index([poolId])
 }
+

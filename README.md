@@ -1,48 +1,62 @@
-This is a base node js project template, which anyone can use as it has been prepared, by keeping some of the most important code principles and project management recommendations. Feel free to change anything. 
+# SmartRide: Advanced Cab Pooling System
 
+SmartRide is a high-performance backend system designed to solve the airport ride-pooling problem. It efficiently matches passengers sharing similar routes into cabs while respecting seat, luggage, and detour constraints, optimizing for both passenger cost and vehicle utility.
 
-`src` -> Inside the src folder all the actual source code regarding the project will reside, this will not include any kind of tests. (You might want to make separate tests folder)
+##  Tech Stack
+- **Runtime**: Node.js (v22)
+- **Framework**: Express.js
+- **Database**: PostgreSQL (v15)
+- **ORM**: Prisma 7.4.0 (with Driver Adapters)
+- **Infrastructure**: Docker & Docker Compose
+- **Logic**: Greedy Selection Algorithm + Haversine Distance Formula
 
-Lets take a look inside the `src` folder
+## 🛠 Setup & Run Instructions
+The entire system is Dockerized for a "one-command" setup.
 
- - `config` -> In this folder anything and everything regarding any configurations or setup of a library or module will be done. For example: setting up `dotenv` so that we can use the environment variables anywhere in a cleaner fashion, this is done in the `server-config.js`. One more example can be to setup you logging library that can help you to prepare meaningful logs, so configuration for this library should also be done here. 
-
- - `routes` -> In the routes folder, we register a route and the corresponding middleware and controllers to it. 
-
- - `middlewares` -> they are just going to intercept the incoming requests where we can write our validators, authenticators etc. 
-
- - `controllers` -> they are kind of the last middlewares as post them you call you business layer to execute the budiness logic. In controllers we just receive the incoming requests and data and then pass it to the business layer, and once business layer returns an output, we structure the API response in controllers and send the output. 
-
- - `repositories` -> this folder contains all the logic using which we interact the DB by writing queries, all the raw queries or ORM queries will go here.
-
- - `services` -> contains the buiness logic and interacts with repositories for data from the database
-
- - `utils` -> contains helper methods, error classes etc.
-
-### Setup the project
-
- - Download this template from github and open it in your favourite text editor. 
- - Go inside the folder path and execute the following command:
-  ```
-  npm install
-  ```
- - In the root directory create a `.env` file and add the following env variables
+1.  **Clone the repository** and navigate to the project root.
+2.  **Start the environment**:
+    ```powershell
+    docker-compose up --build -d
     ```
-        PORT=<port number of your choice>
+3.  **Initialize Database & Seed Data**:
+    ```powershell
+    docker-compose exec app npx prisma db push
+    docker-compose exec app npm run seed
     ```
-    ex: 
-    ```
-        PORT=3000
-    ```
- - go inside the `src` folder and execute the following command:
-    ```
-      npx sequelize init
-    ```
- - By executing the above command you will get migrations and seeders folder along with a config.json inside the config folder. 
- - If you're setting up your development environment, then write the username of your db, password of your db and in dialect mention whatever db you are using for ex: mysql, mariadb etc
- - If you're setting up test or prod environment, make sure you also replace the host with the hosted db url.
+4.  **Access the API**: The server will be running at `http://localhost:3000/api/v1`.
+5.  **Database Visualizer**: View the real-time state at `http://localhost:5555` (Prisma Studio).
 
- - To run the server execute
- ```
- npm run dev
- ```
+##  Core Algorithm & Complexity
+We use a **Greedy Selection Algorithm** to handle ride matching.
+- **Complexity**: $O(K)$ where $K$ is the number of active pools. The system simulates route insertion for each candidate pool to find the minimum detour.
+- **Detour Tolerance**: Uses the **Haversine Formula** to calculate great-circle distances. If the simulate detour exceeds a passenger's `maxDetourMinutes`, the pool is rejected.
+- **Time Estimation**: Assumes a constant velocity (e.g., 30 km/h) to convert distance deviation into time deviation.
+
+## 🛡 Concurrency & Safety
+To support **100+ requests per second** without overbooking cabs:
+- **Transactional Logic**: All allocations happen inside a `Prisma.$transaction`.
+- **Double-Check Locking**: Even after the algorithm selects a cab, the system re-verifies `availableSeats` and `availableLuggage` inside the atomic transaction block.
+- **Optimized Performance**: B-Tree indexes are implemented on `status` and `poolId` columns to ensure latency remains **under 300ms**.
+
+##  Dynamic Pricing
+The system encourages pooling through a reward-based formula:
+- **Base Fare**: $5.00
+- **Distance Rate**: $2.00 / km
+- **Shared Discount**: **25% OFF** total fare if the ride is shared with at least one other passenger.
+- **Calculation**: `(Base + (Dist * Rate)) * (isShared ? 0.75 : 1.0)`
+
+##  API Documentation
+- **Postman Collection**: A complete collection is included at the root: `smartRide.postman_collection.json`. 
+- **Key Endpoint**: Use `POST /requests/allocate` for the end-to-end matching process.
+
+##  Project Structure
+- `src/controllers`: Request/Response handling.
+- `src/services`: Core business logic (Allocation Engine).
+- `src/repositories`: Atomic Database operations.
+- `src/config`: Connection & Adapter setup.
+- `src/utils`: Mathematical helpers (Haversine).
+
+##  Assumptions
+1. All pickup and drop-off points are within the same city/region.
+2. Average transit speed is assumed to be 30km/h for detour-to-time conversion.
+3. Passengers are picked up and dropped off in a First-In-First-Out (FIFO) simplified sequence for route simulation.

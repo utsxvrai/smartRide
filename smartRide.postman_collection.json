@@ -1,8 +1,8 @@
 {
 	"info": {
 		"_postman_id": "smart-ride-collection-id",
-		"name": "SmartRide API (Complete)",
-		"description": "API collection for SmartRide cab pooling system featuring Passengers, Cabs, Pools, and Greedy Allocation logic.",
+		"name": "SmartRide API (Premium)",
+		"description": "API collection for SmartRide cab pooling system featuring Passengers, Cabs, Pools, and Greedy Allocation logic. Supporting Dynamic Pricing and System Performance indexes.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -348,14 +348,14 @@
 			"name": "Ride Requests",
 			"item": [
 				{
-					"name": "1. Allocate Ride (GREEDY ALGORITHM)",
-					"description": "Main entry point: Automatically finds a pool or creates a new one using the greedy detour logic.",
+					"name": "1. ALLOCATE NEW RIDE (Dynamic Pricing Demo)",
+					"description": "Main entry point: Matches a passenger to an existing pool or creates a new one. Calculates fare with a 25% discount if shared.",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"passengerId\": 1,\n    \"pickup\": {\n        \"lat\": 12.9716,\n        \"lng\": 77.5946\n    },\n    \"drop\": {\n        \"lat\": 13.1986,\n        \"lng\": 77.7066\n    }\n}",
+							"raw": "{\n    \"passengerId\": 2,\n    \"pickup\": {\n        \"lat\": 12.9780,\n        \"lng\": 77.5950\n    },\n    \"drop\": {\n        \"lat\": 13.1990,\n        \"lng\": 77.7070\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"

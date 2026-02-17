@@ -1,5 +1,5 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const prisma = require("../config/prisma");
+
 
 async function main() {
   console.log("Cleaning up database...");
@@ -67,8 +67,10 @@ async function main() {
       dropLat: 13.1986, 
       dropLng: 77.7066,
       status: "ACCEPTED",
+      fare: 25.50
     },
   });
+
 
 
   console.log("Seed data created successfully!");

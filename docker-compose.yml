@@ -9,6 +9,10 @@ services:
       - redis
     environment:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/ride_pool?schema=public
+    volumes:
+      - .:/app
+      - /app/node_modules
+
 
   postgres:
     image: postgres:15

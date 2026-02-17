@@ -27,11 +27,13 @@ class RidePoolRepository {
       where,
       include: {
         cab: true,
+        rideRequests: true,
         _count: {
           select: { rideRequests: true },
         },
       },
     });
+
   }
 
   async updateStatus(id, status) {

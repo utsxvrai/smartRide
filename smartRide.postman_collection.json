@@ -1,0 +1,495 @@
+{
+	"info": {
+		"_postman_id": "smart-ride-collection-id",
+		"name": "SmartRide API (Complete)",
+		"description": "API collection for SmartRide cab pooling system featuring Passengers, Cabs, Pools, and Greedy Allocation logic.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "System",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/info",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"info"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Passengers",
+			"item": [
+				{
+					"name": "Create Passenger",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe\",\n    \"luggageCount\": 2,\n    \"maxDetourMinutes\": 15\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/passengers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"passengers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Passengers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/passengers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"passengers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Passenger By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/passengers/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"passengers",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Passenger",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Updated\",\n    \"luggageCount\": 3,\n    \"maxDetourMinutes\": 20\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/passengers/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"passengers",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Passenger",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/passengers/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"passengers",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cabs",
+			"item": [
+				{
+					"name": "Create Cab",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"totalSeats\": 4,\n    \"totalLuggageCapacity\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/cabs",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cabs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Cabs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/cabs",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cabs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Available Cabs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/cabs/available",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cabs",
+								"available"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Cab By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/cabs/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cabs",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Cab",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"AVAILABLE\",\n    \"totalSeats\": 6\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/cabs/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cabs",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pools",
+			"item": [
+				{
+					"name": "Create Ride Pool (Manual)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cabId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pools",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pools"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Pools",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/pools",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pools"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Pool Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/pools/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pools",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Pool Status (Complete trip)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"COMPLETED\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pools/1/status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pools",
+								"1",
+								"status"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ride Requests",
+			"item": [
+				{
+					"name": "1. Allocate Ride (GREEDY ALGORITHM)",
+					"description": "Main entry point: Automatically finds a pool or creates a new one using the greedy detour logic.",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"passengerId\": 1,\n    \"pickup\": {\n        \"lat\": 12.9716,\n        \"lng\": 77.5946\n    },\n    \"drop\": {\n        \"lat\": 13.1986,\n        \"lng\": 77.7066\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/requests/allocate",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"requests",
+								"allocate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Ride Request (Pending Only)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"passengerId\": 1,\n    \"pickupLat\": 12.9716,\n    \"pickupLng\": 77.5946,\n    \"dropLat\": 13.1986,\n    \"dropLng\": 77.7066\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/requests",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"requests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Ride Requests",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/requests",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"requests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Request By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/requests/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"requests",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Assign Request to Pool (Manual)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"requestId\": 1,\n    \"poolId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/requests/assign",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"requests",
+								"assign"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Ride Request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/requests/1/cancel",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"requests",
+								"1",
+								"cancel"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000/api/v1",
+			"type": "string"
+		}
+	]
+}
